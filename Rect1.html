@@ -1,0 +1,80 @@
+<html>
+<head>
+<style type="text/css" >
+.blackRectangle { color: black; background-color: brown; z-index: 1;display:inline-block; margin:3% 0.1% 0 0;bottom:45%}
+.greenBall {position:absolute;left:50;border-radius:50%;height:30;width:30;background:green;}
+</style>
+<script src="js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" >
+	var H=[20,40,60,80,60,20,40,60,80,60,20,40,60,80,60,20,40,60,80,60,20,40,60,80,60,20,40,60,80,60];
+	var ball_top = 258;
+	var loff = 40;
+	var index_count = 0;
+	function drawRectangles()
+	{
+		for(var i=0;i<H.length;++i){
+		$('ul').append('<li class="blackRectangle"></li>');}
+		for(var i=0;i<H.length;i++)
+		{
+			$('li:nth-child(' + (i+1) + ')').css("height",H[i]*3);
+			$('li:nth-child(' + (i+1) + ')').css("width",loff);
+		}
+	}
+	function drawCircle()
+	{
+		$('body').append('<div id ="ball1" class="greenBall"> </div>');
+		$('#ball1').css("top",ball_top-H[0]*3);
+	}
+	function jump(new_height)
+	{
+		$('.greenBall').animate({top:0}).animate({top:new_height});
+	}
+	var curr_index = 1;
+	var nof = 1;
+	var cr = 50;
+	var lastIndex = 0;
+	var noBars = H.length;
+	function right()
+	{
+		$('.blackRectangle:nth-child('+(curr_index)+')').css('z-index','-1');		
+		$('.blackRectangle:nth-child('+(curr_index)+')').css('background','white');		
+		$('.blackRectangle:nth-child('+(curr_index)+')').empty();	
+		for(var i = curr_index;i<H.length;i++)
+		{
+			$('.blackRectangle:nth-child('+(i+1)+')').css('transform','translate('+(-loff*nof)+'px,0px');//transform: translate(50px,100px);
+		}
+		$('ul').append('<li class="blackRectangle"></li>');
+		$('.blackRectangle:last-child').css('height',H[lastIndex]*3);
+		$('.blackRectangle:last-child').css('width',loff);	
+		$('.blackRectangle:last-child').css('transform','translate('+(-loff)*(lastIndex+1)+'px,0px');	
+		lastIndex++;lastIndex = (lastIndex)%H.length;
+		$('.greenBall').css('left',cr+0.2*loff+nof);
+		noBars++;
+		curr_index++;
+		nof++;
+		curr_index = (curr_index)%H.length;
+	}
+</script>
+<body>
+<ul>
+</ul>
+	<script type="text/javascript">
+		$(document).ready(function(){
+				drawCircle();
+				drawRectangles();
+				$('body').keypress(function(event){
+					switch(event.keyCode)
+					{
+						case 37:console.log("You pressed the left key");break;
+						case 38:jump(ball_top-3*(H[curr_index]));break;
+						case 39:jump(ball_top-3*(H[curr_index]));
+								console.log(ball_top-3*(H[curr_index]));
+								right();break;
+						case 40:console.log("You pressed the down key");break;
+					}
+				});
+				}
+		);
+	</script>
+</body>
+</html>

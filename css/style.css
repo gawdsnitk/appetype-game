@@ -1,0 +1,29 @@
+body{
+  margin:0;
+  padding: 0;
+}
+.arena{
+  position: relative;
+  display: block;
+  width: 800px;
+  height:400px;
+  background: red;
+  margin:50px 250px;
+  overflow: hidden;    
+}
+.arena ul .peak{
+  position: absolute;
+  list-style-type: none;
+  display: inline-block;
+  width:50px;
+  border:1px solid black;
+  bottom:0;
+  transition: transform 200s linear;
+}
+.ball{
+  position: absolute;
+  width:20px;
+  height: 20px;
+  border-radius: 50%;
+  background: blue;
+}

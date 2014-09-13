@@ -1,0 +1,100 @@
+<html>
+	<head>
+		<link href="css/style.css" rel="stylesheet">
+	
+	</head>
+	<body>
+		<div class="arena">
+			<div id="ball1" class="ball"></div>
+			<ul></ul>
+		</div>
+		<script src="js/jquery-1.9.1.min.js"></script>
+		<script>
+		/*Game code starts here*/
+		
+		$(document).ready(function(){
+				var OBSTACLES = 100;
+				var left_pos = 0;
+				var current_peak = 1;
+				var height_factor;
+				for(var i=1;i<=OBSTACLES;++i){
+					height_factor = parseInt(Math.random()*3+1);
+					$('.arena ul').append('<li class="peak">'+i+'</li>');
+					$('ul .peak:nth-child('+i+')').css('left',left_pos);
+					$('ul .peak:nth-child('+i+')').css('height',25*height_factor-2);
+					left_pos += 52;
+				}
+				
+				var ball_left_pos = 0;
+				$('#ball1').css('bottom',parseInt($('.arena .peak:nth-child(1)').css('height'))+2);
+				$('#ball1').css('left',ball_left_pos);
+				var LEFT_KEY = 37;
+				var UP_KEY = 38;
+				var RIGHT_KEY = 39;
+				var DOWN_KEY = 40;
+				
+				$('.peak').css('transform','translateX(-10000%)');
+				setInterval(function(){
+					current_peak++;
+					console.log(current_peak);
+					current_peak_height = parseInt($('ul .peak:nth-child('+current_peak+')').css('height'));
+					if(current_peak_height>parseInt($('#ball1').css('bottom'))){
+						//alert('collided');
+						console.log('collided');
+					}
+					else{
+						$('#ball1').css('bottom',current_peak_height+2);
+					}
+				},200000/120);
+				$(document).on("keydown",function(event){
+				/*setInterval(function(){
+					
+				},100);*/
+				console.log(event.keyCode);
+					if(event.keyCode == LEFT_KEY)
+						moveObstacles('right');
+					if(event.keyCode == RIGHT_KEY)
+						moveObstacles('left');
+					if(event.keyCode == UP_KEY)
+						moveBall('up');
+				});
+				
+				var current_peak_height;
+				function moveObstacles(direction){
+					var multiply_factor = 1;
+					if(direction=="left"){
+						multiply_factor = -1;
+					}
+					var elem_css_left;
+					for(var i=1;i<=OBSTACLES;++i){
+						elem_css_left = parseInt($('ul .peak:nth-child('+i+')').css('left'));
+						$('ul .peak:nth-child('+i+')').css('left',elem_css_left+(multiply_factor*2));
+					}
+					ball_left_pos = parseInt($('ul .peak:nth-child(1)').css('left')) - 20;
+					var current_peak_number = parseInt(Math.abs(ball_left_pos)/52)+1;
+					console.log('Ball pos: '+ current_peak_number);
+					current_peak_height = parseInt($('ul .peak:nth-child('+current_peak_number+')').css('height'));
+					console.log('Height of current peak: '+ current_peak_height);
+					console.log('Height of ball: '+ $('#ball1').css('bottom'));
+					$('#ball1').css('bottom',current_peak_height+2);
+				}
+				function moveBall(direction){
+					if(parseInt($('#ball1').css('bottom')) - 2 != current_peak_height)
+						return;
+					if(direction == 'up'){
+						var top_pos = parseInt($('#ball1').css('bottom'))+100;
+//						$('#ball1').animate({top:top_pos}).animate({top:200});
+						$('#ball1').css('bottom',top_pos);
+						setTimeout(function(){
+							var returning_height = current_peak_height + 2;
+							$('#ball1').css('bottom',returning_height);
+						},1000);
+					}
+				}
+			}
+		);
+		
+		/*Game code ends here.*/
+	</script>
+	</body>
+</html>
